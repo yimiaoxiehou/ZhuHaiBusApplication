@@ -1,4 +1,4 @@
-package top.yimiaohome.zhuhai_busapplication;
+package top.yimiaohome.zhuhai_busapplication.Activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,6 +7,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import java.util.ArrayList;
+import top.yimiaohome.zhuhai_busapplication.Database.MyDataBasesHelper;
+import top.yimiaohome.zhuhai_busapplication.Entity.Bus;
+import top.yimiaohome.zhuhai_busapplication.Entity.Line;
+import top.yimiaohome.zhuhai_busapplication.Entity.Station;
+import top.yimiaohome.zhuhai_busapplication.Network.HttpGetServerData;
+import top.yimiaohome.zhuhai_busapplication.R;
 
 public class MainActivity extends AppCompatActivity {
     String TAG = "MainActivity";

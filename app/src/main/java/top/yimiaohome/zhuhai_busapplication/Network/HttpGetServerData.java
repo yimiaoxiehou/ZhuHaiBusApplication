@@ -1,4 +1,4 @@
-package top.yimiaohome.zhuhai_busapplication;
+package top.yimiaohome.zhuhai_busapplication.Network;
 
 import android.util.Log;
 import com.google.gson.Gson;
@@ -9,7 +9,9 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import okhttp3.HttpUrl;
-
+import top.yimiaohome.zhuhai_busapplication.Entity.Bus;
+import top.yimiaohome.zhuhai_busapplication.Entity.Line;
+import top.yimiaohome.zhuhai_busapplication.Entity.Station;
 /**
  * Created by yimia on 2017/12/15.
  */
@@ -21,7 +23,7 @@ public class HttpGetServerData {
     static final String SCHEME = "http";
     static final String PATH = "Handlers/BusQuery.ashx";
 
-    static ArrayList<Bus> GetBusListOnRoad(String lineName, String fromStation){
+    public static ArrayList<Bus> GetBusListOnRoad(String lineName, String fromStation){
 
         //ArrayList<Bus> runningBus = new ArrayList<>();
         HttpUrl url = new HttpUrl.Builder()
@@ -62,7 +64,7 @@ public class HttpGetServerData {
         return null;
     }
 
-    static ArrayList<Line> GetLineListByLineName(String key){
+    public static ArrayList<Line> GetLineListByLineName(String key){
 
         HttpUrl url = new HttpUrl.Builder()
                 .scheme(SCHEME)
@@ -96,7 +98,7 @@ public class HttpGetServerData {
     }
 
 
-    static ArrayList<Station> GetStationList(String lineId){
+    public static ArrayList<Station> GetStationList(String lineId){
 
         HttpUrl url = new HttpUrl.Builder()
                 .scheme(SCHEME)
