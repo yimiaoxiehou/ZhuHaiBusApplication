@@ -14,9 +14,9 @@ import okhttp3.HttpUrl;
  * Created by yimia on 2017/12/15.
  */
 
-public class HttpGetServerDatas {
+public class HttpGetServerData {
 
-    static final String TAG = "HttpGetServerDatas";
+    static final String TAG = "HttpGetServerData";
     static final String HOST = "www.zhbuswx.com";
     static final String SCHEME = "http";
     static final String PATH = "Handlers/BusQuery.ashx";

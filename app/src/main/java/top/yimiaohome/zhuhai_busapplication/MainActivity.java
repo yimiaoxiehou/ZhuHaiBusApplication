@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         queryRunningBusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<Bus> runningBus = HttpGetServerDatas.GetBusListOnRoad("8路", "拱北口岸总站");
+                ArrayList<Bus> runningBus = HttpGetServerData.GetBusListOnRoad("8路", "拱北口岸总站");
                 if (runningBus!=null){
                     showInfoTv.setText("");
                     for(Bus bus : runningBus){
@@ -40,12 +40,12 @@ public class MainActivity extends AppCompatActivity {
         queryLinesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<Line> lines = HttpGetServerDatas.GetLineListByLineName("8路");
+                ArrayList<Line> lines = HttpGetServerData.GetLineListByLineName("8路");
                 if (lines!=null){
                     showInfoTv.setText("");
                     for (Line line : lines){
                         showInfoTv.setText(showInfoTv.getText()+"\n"+line.getLineNumber());
-                        ArrayList<Station> stations = HttpGetServerDatas.GetStationList(line.getId());
+                        ArrayList<Station> stations = HttpGetServerData.GetStationList(line.getId());
                         if (stations!=null){
                             for (Station station : stations){
                                 showInfoTv.setText(showInfoTv.getText()+"\n"+station.getName());
