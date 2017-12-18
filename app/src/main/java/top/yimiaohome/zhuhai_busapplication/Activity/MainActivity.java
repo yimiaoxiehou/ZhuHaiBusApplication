@@ -25,9 +25,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        queryRunningBusBtn=findViewById(R.id.query_runningBus_btn);
-        queryLinesBtn=findViewById(R.id.query_lines_btn);
-        showInfoTv=findViewById(R.id.show_info_tv);
+        queryRunningBusBtn=(Button) findViewById(R.id.query_runningBus_btn);
+        queryLinesBtn=(Button) findViewById(R.id.query_lines_btn);
+        showInfoTv=(TextView) findViewById(R.id.show_info_tv);
         queryRunningBusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,5 +66,18 @@ public class MainActivity extends AppCompatActivity {
         });
         myDataBasesHelper=new MyDataBasesHelper(this,"Bus.db",null,1);
         myDataBasesHelper.getWritableDatabase();
+        ArrayList result = HttpGetServerData.GetBusListOnRoadWithStation("8路", "拱北口岸总站");
+        showInfoTv.setText("Start");
+        result.forEach(r -> {
+            if (r.getClass()==Bus.class){
+                Bus tempBus = (Bus) r;
+                showInfoTv.setText(showInfoTv.getText()+"("+tempBus.getBusNumber()+")");
+            }
+            else if (r.getClass()==Station.class){
+                Station tempStation = (Station) r;
+                showInfoTv.setText(showInfoTv.getText()+"-->"+tempStation.getName());
+            }
+        });
+        showInfoTv.setText(showInfoTv.getText()+"End");
     }
 }

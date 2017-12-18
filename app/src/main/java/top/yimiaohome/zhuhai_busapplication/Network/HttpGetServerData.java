@@ -1,5 +1,7 @@
 package top.yimiaohome.zhuhai_busapplication.Network;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -63,7 +65,6 @@ public class HttpGetServerData {
         }
         return null;
     }
-
     public static ArrayList<Line> GetLineListByLineName(String key){
 
         HttpUrl url = new HttpUrl.Builder()
@@ -97,7 +98,6 @@ public class HttpGetServerData {
         return null;
     }
 
-
     public static ArrayList<Station> GetStationList(String lineId){
 
         HttpUrl url = new HttpUrl.Builder()
@@ -128,5 +128,32 @@ public class HttpGetServerData {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static ArrayList GetBusListOnRoadWithStation(String lineName, String fromStation){
+        ArrayList<Bus> runningBus = HttpGetServerData.GetBusListOnRoad(lineName, fromStation);
+        ArrayList<Line> lines = HttpGetServerData.GetLineListByLineName(lineName);
+        ArrayList result = new ArrayList();
+        if (runningBus!=null && lines!=null){
+            lines.forEach(line -> {
+                if (line.getFromStation().equals(fromStation)){
+                    ArrayList<Station> stations = HttpGetServerData.GetStationList(line.getId());
+                    if (stations!=null) {
+                        ArrayList<String> busCurrentIn = new ArrayList<>();
+                        runningBus.forEach(bus -> {
+                            busCurrentIn.add(bus.getCurrentStation());
+                        });
+                        stations.forEach(station -> {
+                            result.add(station);
+                            while (busCurrentIn.contains(station.getName())){
+                                result.add(runningBus.get(busCurrentIn.indexOf(station.getName())));
+                                busCurrentIn.set(busCurrentIn.indexOf(station.getName()),"");
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        return result;
     }
 }
