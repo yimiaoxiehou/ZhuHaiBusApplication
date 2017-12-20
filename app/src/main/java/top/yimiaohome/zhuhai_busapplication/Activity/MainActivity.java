@@ -1,12 +1,20 @@
 package top.yimiaohome.zhuhai_busapplication.Activity;
 
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
+
+import top.yimiaohome.zhuhai_busapplication.Adapter.BusAdapter;
 import top.yimiaohome.zhuhai_busapplication.Database.MyDataBasesHelper;
 import top.yimiaohome.zhuhai_busapplication.Entity.Bus;
 import top.yimiaohome.zhuhai_busapplication.Entity.Line;
@@ -20,12 +28,21 @@ public class MainActivity extends AppCompatActivity {
     private Button queryRunningBusBtn;
     private Button queryLinesBtn;
     private TextView showInfoTv;
-
+    private ListView list_bus;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        queryRunningBusBtn=(Button) findViewById(R.id.query_runningBus_btn);
+        setContentView(R.layout.activity_runningbus);
+        BusAdapter busAdapter=new BusAdapter(this);
+        ArrayList result=HttpGetServerData.GetBusListOnRoadWithStation("8路","拱北口岸总站");
+        BusAdapter.setTextIdList(result);
+        list_bus=(ListView) findViewById(R.id.list_bus);
+        list_bus.setAdapter(busAdapter);
+        Button btn=(Button) findViewById(R.id.returnbtn);
+        Drawable drawable=getResources().getDrawable(R.drawable.returnbtn);
+        drawable.setBounds(0,0,100,100);
+        btn.setCompoundDrawables(drawable,null,null,null);
+        /*queryRunningBusBtn=(Button) findViewById(R.id.query_runningBus_btn);
         queryLinesBtn=(Button) findViewById(R.id.query_lines_btn);
         showInfoTv=(TextView) findViewById(R.id.show_info_tv);
         queryRunningBusBtn.setOnClickListener(new View.OnClickListener() {
@@ -68,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         myDataBasesHelper.getWritableDatabase();
         ArrayList result = HttpGetServerData.GetBusListOnRoadWithStation("8路", "拱北口岸总站");
         showInfoTv.setText("Start");
-        result.forEach(r -> {
+        result.forEach(r -> {   //fot(Object r : result):
             if (r.getClass()==Bus.class){
                 Bus tempBus = (Bus) r;
                 showInfoTv.setText(showInfoTv.getText()+"("+tempBus.getBusNumber()+")");
@@ -78,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 showInfoTv.setText(showInfoTv.getText()+"-->"+tempStation.getName());
             }
         });
-        showInfoTv.setText(showInfoTv.getText()+"End");
+        showInfoTv.setText(showInfoTv.getText()+"End");*/
+
     }
 }
