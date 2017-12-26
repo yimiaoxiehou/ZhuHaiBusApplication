@@ -10,6 +10,7 @@ import top.yimiaohome.zhuhai_busapplication.Activity.MapActivity;
 
 /**
  * Created by yimia on 2017/12/24.
+ * 用于根据关键字搜索 poi
  */
 
 public class Poi {
@@ -18,7 +19,7 @@ public class Poi {
     public static void queryPoi(Context mContenxt,String keyWord) {
         String cityCode = "珠海";
         PoiSearch.Query query = new PoiSearch.Query(keyWord, "", cityCode);//输入提示
-        query.setCityLimit(true);
+        query.setCityLimit(true);    //强制使用城市范围限制
         query.setPageSize(10);
         query.setPageNum(0);
         PoiSearch poiSearch = new PoiSearch(mContenxt, query);

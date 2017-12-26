@@ -1,6 +1,5 @@
 package top.yimiaohome.zhuhai_busapplication.Network;
 
-import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.util.Log;
 import java.io.IOException;
@@ -16,13 +15,12 @@ import okhttp3.Response;
 
 public class HttpGetTask extends AsyncTask<HttpUrl,Integer, String> {
 
-    final String TAG = "HttpGetTask";
-
     static final OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(20, TimeUnit.SECONDS)
             .writeTimeout(20,TimeUnit.SECONDS)
             .readTimeout(20,TimeUnit.SECONDS)
             .build();
+    final String TAG = "HttpGetTask";
 
     @Override
     protected String doInBackground(HttpUrl... url) {

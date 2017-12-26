@@ -8,14 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import com.amap.api.maps.MapView;
-import com.amap.api.services.core.PoiItem;
-import com.amap.api.services.poisearch.PoiResult;
-import com.amap.api.services.poisearch.PoiSearch;
-import com.amap.api.services.route.RouteSearch;
 import java.util.ArrayList;
-import java.util.List;
-
 import top.yimiaohome.zhuhai_busapplication.Database.MyDataBasesHelper;
 import top.yimiaohome.zhuhai_busapplication.Entity.Bus;
 import top.yimiaohome.zhuhai_busapplication.Entity.Line;

@@ -27,6 +27,8 @@ import top.yimiaohome.zhuhai_busapplication.R;
  */
 
 public class MapActivity extends AppCompatActivity implements View.OnClickListener,AMap.OnMyLocationChangeListener {
+    final static String TAG = "MapActivity";
+
     public static Context mContext;
     public static List<PoiItem> poiItemList;
     public static GeocodeAddress destination;
@@ -35,7 +37,6 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
     public static AMap aMap;
     public static LatLonPoint startPoint;
     public static LatLonPoint endPoint;
-    final String TAG = "MapActivity";
     Location mLocation;
     MapView mMapView;
     EditText destination_et;

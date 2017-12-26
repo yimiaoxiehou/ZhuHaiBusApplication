@@ -1,7 +1,5 @@
 package top.yimiaohome.zhuhai_busapplication.Network;
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;

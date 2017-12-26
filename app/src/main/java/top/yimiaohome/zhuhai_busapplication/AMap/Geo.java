@@ -9,11 +9,11 @@ import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import java.util.List;
-
 import top.yimiaohome.zhuhai_busapplication.Activity.MapActivity;
 
 /**
  * Created by yimia on 2017/12/24.
+ * 用于解析 Poi 信息
  */
 
 public class Geo {

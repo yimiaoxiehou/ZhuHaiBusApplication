@@ -33,6 +33,7 @@ public class Route {
                                 Log.d(TAG, "onBusRouteSearched: first busPath step is "+l.getBusLineName());
                             });
                         });
+
                         BusRouteOverlay busRouteOverlay = new BusRouteOverlay(
                                 MapActivity.mContext,
                                 MapActivity.aMap,
