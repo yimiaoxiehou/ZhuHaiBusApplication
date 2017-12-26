@@ -1,31 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical">
+    tools:context="top.yimiaohome.zhuhai_busapplication.Activity.MainActivity">
 
-    <Button
-        android:id="@+id/query_runningBus_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="query running bus" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/query_lines_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="query lines" />
+        <Button
+            android:id="@+id/open_realtime_bus_query_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="公交实时查询" />
 
-    <Button
-        android:id="@+id/open_map_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="open text"/>
+        <Button
+            android:id="@+id/open_route_search_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="公交出行路线规划" />
 
-    <TextView
-        android:id="@+id/show_info_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    </LinearLayout>
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

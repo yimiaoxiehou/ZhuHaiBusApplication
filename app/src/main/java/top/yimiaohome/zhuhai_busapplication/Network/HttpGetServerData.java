@@ -48,7 +48,6 @@ public class HttpGetServerData {
                 Log.d(TAG, "queryRunningBus: jsonArray is " + data.toString());
                 ArrayList<Bus> runningBus = gson.fromJson(data, new TypeToken<ArrayList<Bus>>() {}.getType());
                 Log.d(TAG, "queryRunningBus: response bus data is " + data.toString());
-
                 return runningBus;
             }else{
                 Log.d(TAG, "queryRunningBus: error response is null or response failed.");
@@ -148,10 +147,13 @@ public class HttpGetServerData {
                                 busCurrentIn.set(busCurrentIn.indexOf(station.getName()),"");
                             }
                         });
-                    }
+                    }else
+                        return;
                 }
             });
+            return result;
         }
-        return result;
+        else
+            return null;
     }
 }
