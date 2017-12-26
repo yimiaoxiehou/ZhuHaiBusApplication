@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -55,12 +56,16 @@ public class BusAdapter extends BaseAdapter {
             TextView textView1=(TextView) linearLayout.findViewById(R.id.bus_text1);
             Bus tempBus = (Bus) textIdList.get(position);
             textView1.setText(tempBus.getBusNumber());
+
+
         }
         else if(textIdList.get(position).getClass()==Station.class){
-            linearLayout=(LinearLayout) layoutInflater.inflate(R.layout.activity_busitem,null);
-            TextView textView2=(TextView) linearLayout.findViewById(R.id.bus_text2);
+            linearLayout=(LinearLayout) layoutInflater.inflate(R.layout.activity_stationitem,null);
+            TextView textView2=(TextView) linearLayout.findViewById(R.id.station_text);
             Station tempBus=(Station) textIdList.get(position);
             textView2.setText(tempBus.getName());
+            TextView textView3=(TextView) linearLayout.findViewById(R.id.station_index);
+            textView3.setText(""+position);
         }
         return linearLayout;
     }

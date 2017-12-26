@@ -55,14 +55,14 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="16dp"
-            android:tint="@android:color/white"
             android:id="@+id/floatbtn"
             android:elevation="1dp"
-            android:background="@drawable/ripple"/>
+            android:background="@drawable/ripple"
+            android:src="@drawable/shuaxin"
+            android:scaleType="centerCrop"/>
         <ListView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:id="@+id/list_bus"/>
     </RelativeLayout>
-
 </LinearLayout>
