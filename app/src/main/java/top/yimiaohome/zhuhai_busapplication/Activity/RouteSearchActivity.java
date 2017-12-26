@@ -9,6 +9,6 @@ public class RouteSearchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_route_search);
+        setContentView(R.layout.route_search_view);
     }
 }

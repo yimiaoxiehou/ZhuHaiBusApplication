@@ -5,16 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import top.yimiaohome.zhuhai_busapplication.Entity.Bus;
 import top.yimiaohome.zhuhai_busapplication.Entity.Station;
-import top.yimiaohome.zhuhai_busapplication.Network.HttpGetServerData;
 import top.yimiaohome.zhuhai_busapplication.R;
 
 /**
@@ -22,8 +19,8 @@ import top.yimiaohome.zhuhai_busapplication.R;
  */
 
 public class BusAdapter extends BaseAdapter {
-    private Context context;
     private static List textIdList;
+    private Context context;
     public BusAdapter(Context context){
         this.context=context;
     }
@@ -52,7 +49,7 @@ public class BusAdapter extends BaseAdapter {
         LayoutInflater layoutInflater=(LayoutInflater) context.getSystemService(inflater);
         LinearLayout linearLayout=null;
         if(textIdList.get(position).getClass()==Bus.class){
-            linearLayout = (LinearLayout) layoutInflater.inflate(R.layout.activity_busitem,null);
+            linearLayout = (LinearLayout) layoutInflater.inflate(R.layout.busitem_view,null);
             TextView textView1=(TextView) linearLayout.findViewById(R.id.bus_text1);
             Bus tempBus = (Bus) textIdList.get(position);
             textView1.setText(tempBus.getBusNumber());
@@ -60,7 +57,7 @@ public class BusAdapter extends BaseAdapter {
 
         }
         else if(textIdList.get(position).getClass()==Station.class){
-            linearLayout=(LinearLayout) layoutInflater.inflate(R.layout.activity_stationitem,null);
+            linearLayout=(LinearLayout) layoutInflater.inflate(R.layout.stationitem_view,null);
             TextView textView2=(TextView) linearLayout.findViewById(R.id.station_text);
             Station tempBus=(Station) textIdList.get(position);
             textView2.setText(tempBus.getName());

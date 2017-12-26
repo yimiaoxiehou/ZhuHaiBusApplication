@@ -31,23 +31,21 @@
         android:roundIcon="@drawable/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.MapActivity">
+        <activity android:name=".Activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".Activity.RealTimeBusQueryActivity" />
+        <activity android:name=".Activity.RouteSearchActivity" />
+        <activity android:name=".Activity.MapActivity"/>
 
         <service android:name="com.amap.api.location.APSService" />
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="31ed4c053e9fc9c7f86ac5d418357517" />
-
-        <activity android:name=".Activity.RouteSearchActivity" />
-        <activity android:name=".Activity.MainActivity"></activity>
     </application>
 
 </manifest>

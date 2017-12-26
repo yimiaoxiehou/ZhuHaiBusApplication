@@ -7,9 +7,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import top.yimiaohome.zhuhai_busapplication.Adapter.BusAdapter;
 import top.yimiaohome.zhuhai_busapplication.Database.MyDataBasesHelper;
 import top.yimiaohome.zhuhai_busapplication.Entity.Line;
 import top.yimiaohome.zhuhai_busapplication.Network.HttpGetServerData;
@@ -18,24 +21,28 @@ import top.yimiaohome.zhuhai_busapplication.R;
 public class RealTimeBusQueryActivity extends AppCompatActivity {
     String TAG = "RealTimeBusQueryActivity";
     private MyDataBasesHelper myDataBasesHelper;
-    private Button lineQueryBtn;
-    private EditText lineNumberEt;
+    private Button lineQueryBTN;
+    private EditText lineNumberET;
     private Context context;
     private Line queryLine;
+    private ListView runningBusAndStationLV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_realtime_bus_query);
         context=getBaseContext();
-        lineNumberEt = (EditText) findViewById(R.id.line_number_et);
-        lineQueryBtn = (Button) findViewById(R.id.line_query_btn);
-        lineQueryBtn.setOnClickListener(new View.OnClickListener() {
+        lineNumberET = (EditText) findViewById(R.id.line_number_et);
+        lineQueryBTN = (Button) findViewById(R.id.line_query_btn);
+        runningBusAndStationLV = (ListView) findViewById(R.id.running_bus_and_station_lv);
+        lineQueryBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ArrayList result = HttpGetServerData.GetBusListOnRoadWithStation(queryLine.getLineNumber(), queryLine.getFromStation());
                 if (result!=null){
-
+                    BusAdapter busAdapter = new BusAdapter(context);
+                    BusAdapter.setTextIdList(result);
+                    runningBusAndStationLV.setAdapter(busAdapter);
                 }
                 else {
                     Log.d(TAG, "onClick: runningBus is null");

@@ -26,6 +26,7 @@
     </RelativeLayout>
 
     <ListView
+        android:id="@+id/running_bus_and_station_lv"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
