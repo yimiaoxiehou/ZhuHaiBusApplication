@@ -17,6 +17,12 @@
         android:layout_height="wrap_content"
         android:text="query lines" />
 
+    <Button
+        android:id="@+id/open_map_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="open text"/>
+
     <TextView
         android:id="@+id/show_info_tv"
         android:layout_width="wrap_content"

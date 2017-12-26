@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
+
 android {
     compileSdkVersion 26
     defaultConfig {
@@ -12,6 +13,9 @@ android {
         jackOptions{
             enabled true
         }
+        ndk{
+            abiFilters "armeabi","armeabi-v7a","arm64-v8a","x86","arm64-v8a","x86_64"
+        }
     }
     buildTypes {
         release {
@@ -19,18 +23,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    compileOptions {//使用JAVA8语法解析
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
 }
+
+android.compileOptions.sourceCompatibility 1.8
+android.compileOptions.targetCompatibility 1.8
 
 retrolambda {//指定将源码编译的级别，使用下列代码，会将代码编译到兼容1.6的字节码格式
     javaVersion JavaVersion.VERSION_1_6
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:26.+'
     implementation 'com.android.support.constraint:constraint-layout:1.+'
     testImplementation 'junit:junit:4.12'
@@ -39,4 +42,9 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.+'
     implementation 'com.google.code.gson:gson:2.+'
 
+    implementation 'com.amap.api:3dmap:latest.integration'
+    //定位功能
+    implementation 'com.amap.api:location:latest.integration'
+    //搜索功能
+    implementation 'com.amap.api:search:latest.integration'
 }
