@@ -20,7 +20,6 @@ import top.yimiaohome.zhuhai_busapplication.R;
 
 public class RealTimeBusQueryActivity extends AppCompatActivity {
     String TAG = "RealTimeBusQueryActivity";
-    private MyDataBasesHelper myDataBasesHelper;
     private Button lineQueryBTN;
     private EditText lineNumberET;
     private Context context;
@@ -38,7 +37,8 @@ public class RealTimeBusQueryActivity extends AppCompatActivity {
         lineQueryBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList result = HttpGetServerData.GetBusListOnRoadWithStation(queryLine.getLineNumber(), queryLine.getFromStation());
+                //ArrayList result = HttpGetServerData.GetBusListOnRoadWithStation(queryLine.getLineNumber(), queryLine.getFromStation());
+                ArrayList result = HttpGetServerData.GetBusListOnRoadWithStation("8路","拱北口岸总站");
                 if (result!=null){
                     BusAdapter busAdapter = new BusAdapter(context);
                     BusAdapter.setTextIdList(result);
