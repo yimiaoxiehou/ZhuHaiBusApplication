@@ -1,5 +1,6 @@
 package top.yimiaohome.zhuhai_busapplication.AMap;
 
+import android.app.Activity;
 import android.util.Log;
 import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
@@ -10,6 +11,7 @@ import com.amap.api.services.route.RideRouteResult;
 import com.amap.api.services.route.RouteSearch;
 import com.amap.api.services.route.WalkRouteResult;
 import top.yimiaohome.zhuhai_busapplication.Activity.MapActivity;
+import top.yimiaohome.zhuhai_busapplication.R;
 
 /**
  * Created by yimia on 2017/12/24.
@@ -17,9 +19,18 @@ import top.yimiaohome.zhuhai_busapplication.Activity.MapActivity;
 
 public class Route {
     static final String TAG = "Route";
-
-    public static void getRoute(LatLonPoint startPoint,LatLonPoint endPoint) {
-        RouteSearch routeSearch = new RouteSearch(MapActivity.mContext);
+    private static Route instance;
+    private Route(){}
+    public static Route getInstance(){
+        if (instance == null){
+            instance = new Route();
+        }
+        return instance;
+    }
+    public void getRoute(LatLonPoint startPoint,LatLonPoint endPoint) {
+        MapActivity mapActivity = (MapActivity) MapActivity.getCurrentActivity();
+        mapActivity.mapReset();
+        RouteSearch routeSearch = new RouteSearch(mapActivity.mContext);
         RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(startPoint,endPoint);
         routeSearch.setRouteSearchListener(new RouteSearch.OnRouteSearchListener() {
             @Override
@@ -28,32 +39,22 @@ public class Route {
                     Log.d(TAG, "onBusRouteSearched: succeed");
                     if (busRouteResult != null && busRouteResult.getPaths().size() != 0){
                         BusPath firstBusPath = busRouteResult.getPaths().get(0);
+                        mapActivity.route_tv.setText(firstBusPath.toString());
                         firstBusPath.getSteps().forEach(s->{
                             s.getBusLines().forEach(l->{
                                 Log.d(TAG, "onBusRouteSearched: first busPath step is "+l.getBusLineName());
                             });
                         });
-
+                        mapActivity.aMap.clear();
                         BusRouteOverlay busRouteOverlay = new BusRouteOverlay(
-                                MapActivity.mContext,
-                                MapActivity.aMap,
+                                mapActivity.mContext,
+                                mapActivity.aMap,
                                 busRouteResult.getPaths().get(0),
                                 startPoint,
                                 endPoint);
                         busRouteOverlay.addToMap();
                         busRouteOverlay.zoomToSpan();
-
-                        /*if (busRouteResult.getPaths().size()>0){
-                            busRouteResult.getPaths().forEach(r->{
-                                r.getSteps().forEach(s->{
-                                    s.getBusLines().forEach(l->{
-                                        l.
-                                    });
-                                });
-                            });
-                        } */
                     }
-                    
                 }
                 else{
                     Log.d(TAG, "onBusRouteSearched: error");

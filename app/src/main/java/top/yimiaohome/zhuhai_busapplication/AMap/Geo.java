@@ -16,11 +16,21 @@ import top.yimiaohome.zhuhai_busapplication.Activity.MapActivity;
  * 用于解析 Poi 信息
  */
 
-public class Geo {
+public class Geo  {
     static final String TAG = "GeocodeSearch";
+    private static Geo instance;
+    private Geo(){}
 
-    public static void queryDestinationLocation(Context mContext,PoiItem poiItem){
+    public static Geo getInstance(){
+        if (instance == null){
+            instance = new Geo();
+        }
+        return instance;
+    }
+
+    public void queryDestinationLocation(Context mContext,PoiItem poiItem){
         //地址编码
+        MapActivity mapActivity = (MapActivity) MapActivity.getCurrentActivity();
         GeocodeSearch geocodeSearch = new GeocodeSearch(mContext);
         geocodeSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
             @Override
@@ -34,7 +44,7 @@ public class Geo {
                 if (rCode == 1000){
                     List<GeocodeAddress> addressList = geocodeResult.getGeocodeAddressList();
                     Log.d(TAG, "onGeocodeSearched: list size is "+addressList.size());
-                    MapActivity.destination = addressList.get(0);
+                    mapActivity.destination = addressList.get(0);
                     Log.d(TAG, "onGeocodeSearched: first address is "+addressList.get(0).getFormatAddress());
                 }else {
                     Log.d(TAG, "onGeocodeSearched: error");

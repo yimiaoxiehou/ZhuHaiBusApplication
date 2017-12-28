@@ -1,5 +1,6 @@
 package top.yimiaohome.zhuhai_busapplication.Activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
@@ -17,7 +18,12 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.geocoder.GeocodeAddress;
 import com.amap.api.services.route.BusRouteResult;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Map;
+
 import top.yimiaohome.zhuhai_busapplication.AMap.Poi;
 import top.yimiaohome.zhuhai_busapplication.AMap.Route;
 import top.yimiaohome.zhuhai_busapplication.R;
@@ -29,19 +35,53 @@ import top.yimiaohome.zhuhai_busapplication.R;
 public class MapActivity extends AppCompatActivity implements View.OnClickListener,AMap.OnMyLocationChangeListener {
     final static String TAG = "MapActivity";
 
-    public static Context mContext;
-    public static List<PoiItem> poiItemList;
-    public static GeocodeAddress destination;
-    public static TextView destination_tv;
-    public static BusRouteResult busRouteResult;
-    public static AMap aMap;
-    public static LatLonPoint startPoint;
-    public static LatLonPoint endPoint;
-    Location mLocation;
-    MapView mMapView;
-    EditText destination_et;
-    Button queryDest_bn;
+    public Context mContext;
+    public List<PoiItem> poiItemList;
+    public GeocodeAddress destination;
+    public TextView destination_tv;
+    public TextView route_tv;
+    public BusRouteResult busRouteResult;
+    public AMap aMap;
+    public LatLonPoint startPoint;
+    public LatLonPoint endPoint;
+    public Location mLocation;
+    public MapView mMapView;
+    public EditText destination_et;
+    public Button queryDest_bn;
     boolean isFirst;
+
+    public static Activity getCurrentActivity () {
+        try {
+            Class activityThreadClass = Class.forName("android.app.ActivityThread");
+            Object activityThread = activityThreadClass.getMethod("currentActivityThread").invoke(
+                    null);
+            Field activitiesField = activityThreadClass.getDeclaredField("mActivities");
+            activitiesField.setAccessible(true);
+            Map activities = (Map) activitiesField.get(activityThread);
+            for (Object activityRecord : activities.values()) {
+                Class activityRecordClass = activityRecord.getClass();
+                Field pausedField = activityRecordClass.getDeclaredField("paused");
+                pausedField.setAccessible(true);
+                if (!pausedField.getBoolean(activityRecord)) {
+                    Field activityField = activityRecordClass.getDeclaredField("activity");
+                    activityField.setAccessible(true);
+                    Activity activity = (Activity) activityField.get(activityRecord);
+                    return activity;
+                }
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,19 +93,24 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         queryDest_bn = (Button) findViewById(R.id.query_location_btn);
         destination_tv = (TextView) findViewById(R.id.destination_query_result_tv);
         mMapView = (MapView) findViewById(R.id.map);
+        route_tv = (TextView) findViewById(R.id.route_tv);
         mMapView.onCreate(savedInstanceState);
         if (aMap == null){
             aMap = mMapView.getMap();
         }
         isFirst=true;
         //定位并显示当前位置
+        mapReset();
+        queryDest_bn.setOnClickListener(this);
+        RouteOverlay routeOverlay = aMap.addRouteOverlay();
+    }
+
+    public void mapReset(){
         MyLocationStyle myLocationStyle = new MyLocationStyle();
         myLocationStyle.interval(2000);
         aMap.setMyLocationStyle(myLocationStyle);
         aMap.setOnMyLocationChangeListener(this);
         aMap.setMyLocationEnabled(true);
-        queryDest_bn.setOnClickListener(this);
-        RouteOverlay routeOverlay = aMap.addRouteOverlay();
     }
 
     @Override
@@ -77,14 +122,14 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                     isFirst=false;
                     //查询 poi (point of interest) 兴趣点
                     if (destination_et.getText().toString()!="") {
-                        Poi.queryPoi(mContext,destination_et.getText().toString());
+                        Poi.getInstance().queryPoi(mContext, destination_et.getText().toString());
                     }
                 }
                 else{
                     isFirst=true;
                     startPoint = new LatLonPoint(mLocation.getLatitude(),mLocation.getLongitude());
                     endPoint = poiItemList.get(0).getLatLonPoint();
-                    Route.getRoute(startPoint,endPoint);
+                    Route.getInstance().getRoute(startPoint,endPoint);
                 }
         }
     }
@@ -120,5 +165,4 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
             Log.d(TAG, "onMyLocationChange: "+location.getLatitude()+","+location.getLongitude());
         }
     }
-
 }

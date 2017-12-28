@@ -15,8 +15,20 @@ import top.yimiaohome.zhuhai_busapplication.Activity.MapActivity;
 
 public class Poi {
     static final String TAG = "Poi";
+    private static Poi instance;
+    private Poi() {
 
-    public static void queryPoi(Context mContenxt,String keyWord) {
+    }
+
+    public static Poi getInstance(){
+        if (instance == null){
+            instance = new Poi();
+        }
+        return instance;
+    }
+
+    public void queryPoi(Context mContenxt,String keyWord) {
+        MapActivity mapActivity = (MapActivity) MapActivity.getCurrentActivity();
         String cityCode = "珠海";
         PoiSearch.Query query = new PoiSearch.Query(keyWord, "", cityCode);//输入提示
         query.setCityLimit(true);    //强制使用城市范围限制
@@ -31,11 +43,11 @@ public class Poi {
                 if (i == 1000){
                     List<PoiItem> poiItemList = poiResult.getPois();
                     Log.d(TAG, "onPoiSearched: first poi is "+poiItemList.get(0).getTitle());
-                    MapActivity.destination_tv.setText(poiItemList.get(0).getTitle());
+                    mapActivity.destination_tv.setText(poiItemList.get(0).getTitle());
                     poiItemList.forEach( r -> {
                         Log.d(TAG, "onPoiSearched: result is " + r.getTitle());
                     });
-                    MapActivity.poiItemList=poiItemList;
+                    mapActivity.poiItemList=poiItemList;
                 }else {
                     Log.d(TAG, "onPoiSearched: error ");
                 }

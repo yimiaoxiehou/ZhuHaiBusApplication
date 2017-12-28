@@ -21,9 +21,11 @@ import top.yimiaohome.zhuhai_busapplication.R;
 public class BusAdapter extends BaseAdapter {
     private static List textIdList;
     private Context context;
+
     public BusAdapter(Context context){
         this.context=context;
     }
+
     public static void setTextIdList(List textIdList1) {
         textIdList = textIdList1;
     }
@@ -66,6 +68,7 @@ public class BusAdapter extends BaseAdapter {
         }
         return linearLayout;
     }
+
     public void addText(String busNumber){
         textIdList.add(busNumber);
         notifyDataSetChanged();
