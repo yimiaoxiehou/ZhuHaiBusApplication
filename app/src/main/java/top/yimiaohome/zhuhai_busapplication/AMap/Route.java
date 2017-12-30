@@ -17,65 +17,71 @@ import top.yimiaohome.zhuhai_busapplication.R;
  * Created by yimia on 2017/12/24.
  */
 
-public class Route {
+public class Route implements RouteSearch.OnRouteSearchListener {
     static final String TAG = "Route";
     private static Route instance;
+    MapActivity mapActivity;
+    LatLonPoint startPoint,endPoint;
     private Route(){}
+
     public static Route getInstance(){
         if (instance == null){
             instance = new Route();
         }
         return instance;
     }
+
     public void getRoute(LatLonPoint startPoint,LatLonPoint endPoint) {
-        MapActivity mapActivity = (MapActivity) MapActivity.getCurrentActivity();
-        mapActivity.mapReset();
+        mapActivity = (MapActivity) MapActivity.getCurrentActivity();
+        this.startPoint=startPoint;
+        this.endPoint=endPoint;
         RouteSearch routeSearch = new RouteSearch(mapActivity.mContext);
         RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(startPoint,endPoint);
-        routeSearch.setRouteSearchListener(new RouteSearch.OnRouteSearchListener() {
-            @Override
-            public void onBusRouteSearched(BusRouteResult busRouteResult, int i) {
-                if (i == AMapException.CODE_AMAP_SUCCESS){
-                    Log.d(TAG, "onBusRouteSearched: succeed");
-                    if (busRouteResult != null && busRouteResult.getPaths().size() != 0){
-                        BusPath firstBusPath = busRouteResult.getPaths().get(0);
-                        mapActivity.route_tv.setText(firstBusPath.toString());
-                        firstBusPath.getSteps().forEach(s->{
-                            s.getBusLines().forEach(l->{
-                                Log.d(TAG, "onBusRouteSearched: first busPath step is "+l.getBusLineName());
-                            });
-                        });
-                        mapActivity.aMap.clear();
-                        BusRouteOverlay busRouteOverlay = new BusRouteOverlay(
-                                mapActivity.mContext,
-                                mapActivity.aMap,
-                                busRouteResult.getPaths().get(0),
-                                startPoint,
-                                endPoint);
-                        busRouteOverlay.addToMap();
-                        busRouteOverlay.zoomToSpan();
-                    }
-                }
-                else{
-                    Log.d(TAG, "onBusRouteSearched: error");
-                }
-            }
-            @Override
-            public void onDriveRouteSearched(DriveRouteResult driveRouteResult, int i) {
-
-            }
-            @Override
-            public void onWalkRouteSearched(WalkRouteResult walkRouteResult, int i) {
-
-            }
-            @Override
-            public void onRideRouteSearched(RideRouteResult rideRouteResult, int i) {
-
-            }
-        });
+        routeSearch.setRouteSearchListener(this);
         RouteSearch.BusRouteQuery query = new RouteSearch.BusRouteQuery(fromAndTo,RouteSearch.BUS_LEASE_WALK,"0756",1);
         routeSearch.calculateBusRouteAsyn(query);
 
     }
 
+    @Override
+    public void onBusRouteSearched(BusRouteResult busRouteResult, int i) {
+        if (i == AMapException.CODE_AMAP_SUCCESS){
+            Log.d(TAG, "onBusRouteSearched: succeed");
+            if (busRouteResult != null && busRouteResult.getPaths().size() > 0){
+                BusPath firstBusPath = busRouteResult.getPaths().get(0);
+                mapActivity.route_tv.setText("title is "+
+                        AMapUtil.getBusPathTitle(firstBusPath)+
+                                "\ndes is "+AMapUtil.getBusPathDes(firstBusPath));
+                Log.d(TAG, "onBusRouteSearched: title is "+
+                        AMapUtil.getBusPathTitle(firstBusPath)+
+                        " des is "+AMapUtil.getBusPathDes(firstBusPath));
+                BusRouteOverlay busRouteOverlay = new BusRouteOverlay(
+                        mapActivity.mContext,
+                        mapActivity.aMap,
+                        busRouteResult.getPaths().get(0),
+                        startPoint,
+                        endPoint);
+                busRouteOverlay.addToMap();
+                busRouteOverlay.zoomToSpan();
+            }
+        }
+        else{
+            Log.d(TAG, "onBusRouteSearched: error");
+        }
+    }
+
+    @Override
+    public void onDriveRouteSearched(DriveRouteResult driveRouteResult, int i) {
+
+    }
+
+    @Override
+    public void onWalkRouteSearched(WalkRouteResult walkRouteResult, int i) {
+
+    }
+
+    @Override
+    public void onRideRouteSearched(RideRouteResult rideRouteResult, int i) {
+
+    }
 }

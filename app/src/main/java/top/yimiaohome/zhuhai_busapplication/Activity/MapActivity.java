@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,12 +20,10 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.geocoder.GeocodeAddress;
 import com.amap.api.services.route.BusRouteResult;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
-
 import top.yimiaohome.zhuhai_busapplication.AMap.Poi;
 import top.yimiaohome.zhuhai_busapplication.AMap.Route;
 import top.yimiaohome.zhuhai_busapplication.R;
@@ -86,6 +86,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         mContext = getApplicationContext();
         //显示地图
         setContentView(R.layout.activity_map);
@@ -107,6 +108,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
     public void mapReset(){
         MyLocationStyle myLocationStyle = new MyLocationStyle();
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);
         myLocationStyle.interval(2000);
         aMap.setMyLocationStyle(myLocationStyle);
         aMap.setOnMyLocationChangeListener(this);
@@ -119,17 +121,26 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         switch (v.getId()){
             case R.id.query_location_btn:
                 if (isFirst) {
-                    isFirst=false;
                     //查询 poi (point of interest) 兴趣点
                     if (destination_et.getText().toString()!="") {
+                        isFirst=false;
+                        poiItemList=null;
                         Poi.getInstance().queryPoi(mContext, destination_et.getText().toString());
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        if (imm!=null){
+                            imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(),0);
+                        }
                     }
                 }
                 else{
-                    isFirst=true;
-                    startPoint = new LatLonPoint(mLocation.getLatitude(),mLocation.getLongitude());
-                    endPoint = poiItemList.get(0).getLatLonPoint();
-                    Route.getInstance().getRoute(startPoint,endPoint);
+                    isFirst = true;
+                    if (poiItemList!=null){
+                        aMap.clear();
+                        mapReset();
+                        startPoint = new LatLonPoint(mLocation.getLatitude(), mLocation.getLongitude());
+                        endPoint = poiItemList.get(0).getLatLonPoint();
+                        Route.getInstance().getRoute(startPoint, endPoint);
+                    }
                 }
         }
     }
@@ -160,9 +171,17 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
     @Override
     public void onMyLocationChange(Location location) {
-        if (mLocation == null || (location.getLongitude()!=mLocation.getLongitude() || location.getLatitude()!=mLocation.getLatitude())){
+        if (mLocation == null || (!locationEquael(location.getLongitude(),mLocation.getLongitude())
+                || !locationEquael(location.getLatitude(),mLocation.getLatitude()))){
             mLocation = location;
             Log.d(TAG, "onMyLocationChange: "+location.getLatitude()+","+location.getLongitude());
         }
+    }
+
+    Boolean locationEquael(double n,double o){
+        if ((int)(n*1000)==(int)(o*1000))
+            return true;
+        else
+            return false;
     }
 }

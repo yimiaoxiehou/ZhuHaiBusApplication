@@ -16,9 +16,11 @@ import top.yimiaohome.zhuhai_busapplication.Activity.MapActivity;
  * 用于解析 Poi 信息
  */
 
-public class Geo  {
+public class Geo implements GeocodeSearch.OnGeocodeSearchListener {
     static final String TAG = "GeocodeSearch";
     private static Geo instance;
+    MapActivity mapActivity;
+
     private Geo(){}
 
     public static Geo getInstance(){
@@ -30,28 +32,28 @@ public class Geo  {
 
     public void queryDestinationLocation(Context mContext,PoiItem poiItem){
         //地址编码
-        MapActivity mapActivity = (MapActivity) MapActivity.getCurrentActivity();
+        mapActivity = (MapActivity) MapActivity.getCurrentActivity();
         GeocodeSearch geocodeSearch = new GeocodeSearch(mContext);
-        geocodeSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
-            @Override
-            public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
-                Log.d(TAG, "onRegeocodeSearched: "+regeocodeResult.toString());
-            }
-
-            @Override
-            public void onGeocodeSearched(GeocodeResult geocodeResult, int rCode) {
-                Log.d(TAG, "onGeocodeSearched: rCode is "+rCode);
-                if (rCode == 1000){
-                    List<GeocodeAddress> addressList = geocodeResult.getGeocodeAddressList();
-                    Log.d(TAG, "onGeocodeSearched: list size is "+addressList.size());
-                    mapActivity.destination = addressList.get(0);
-                    Log.d(TAG, "onGeocodeSearched: first address is "+addressList.get(0).getFormatAddress());
-                }else {
-                    Log.d(TAG, "onGeocodeSearched: error");
-                }
-            }
-        });
+        geocodeSearch.setOnGeocodeSearchListener(this);
         GeocodeQuery geocodeQuery = new GeocodeQuery(poiItem.getTitle(),"0756");
         geocodeSearch.getFromLocationNameAsyn(geocodeQuery);
+    }
+
+    @Override
+    public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
+        Log.d(TAG, "onRegeocodeSearched: "+regeocodeResult.toString());
+    }
+
+    @Override
+    public void onGeocodeSearched(GeocodeResult geocodeResult, int rCode) {
+        Log.d(TAG, "onGeocodeSearched: rCode is "+rCode);
+        if (rCode == 1000){
+            List<GeocodeAddress> addressList = geocodeResult.getGeocodeAddressList();
+            Log.d(TAG, "onGeocodeSearched: list size is "+addressList.size());
+            mapActivity.destination = addressList.get(0);
+            Log.d(TAG, "onGeocodeSearched: first address is "+addressList.get(0).getFormatAddress());
+        }else {
+            Log.d(TAG, "onGeocodeSearched: error");
+        }
     }
 }
