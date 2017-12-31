@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     <ImageView
-        android:id="@+id/bus_image1"
+        android:id="@+id/bus_image"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_centerHorizontal="true"
@@ -14,11 +14,11 @@
         android:src="@drawable/bus" />
 
         <TextView
-            android:id="@+id/bus_text1"
+            android:id="@+id/bus_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/bus_image1"
+            android:layout_toEndOf="@+id/bus_image"
             android:text="" />
     </RelativeLayout>
 </LinearLayout>

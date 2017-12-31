@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -11,7 +12,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="5"
+            android:layout_weight="8"
             android:orientation="vertical" >
 
             <com.amap.api.maps.MapView
@@ -22,32 +23,50 @@
                 android:layout_alignParentTop="true"/>
 
             <LinearLayout
+                android:id="@+id/head_ll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/destination_et"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/starting_et"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="30dp"
+                        android:layout_weight="3"
+                        android:lines="1"
+                        android:text="当前位置"
+                        android:textAlignment="center"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text=" --> "
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:textSize="24sp" />
+
+                    <EditText
+                        android:id="@+id/destination_et"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="30dp"
+                        android:layout_weight="3"
+                        android:lines="1"
+                        android:textAlignment="center"/>
+
+                </LinearLayout>
+                <ListView
+                    android:id="@+id/poi_lists_lv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="150dp"
                     android:textAlignment="center"/>
-
-                <Button
-                    android:id="@+id/query_location_btn"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Query"
-                    android:textAllCaps="false"/>
-
-                <TextView
-                    android:id="@+id/destination_query_result_tv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:textSize="24sp"/>
 
             </LinearLayout>
 
@@ -57,7 +76,8 @@
             android:id="@+id/route_tv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"/>
+            android:layout_weight="1"
+            android:textAlignment="center"/>
 
     </LinearLayout>
 

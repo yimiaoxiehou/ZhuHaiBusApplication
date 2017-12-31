@@ -49,9 +49,10 @@ public class Route implements RouteSearch.OnRouteSearchListener {
             Log.d(TAG, "onBusRouteSearched: succeed");
             if (busRouteResult != null && busRouteResult.getPaths().size() > 0){
                 BusPath firstBusPath = busRouteResult.getPaths().get(0);
-                mapActivity.route_tv.setText("title is "+
-                        AMapUtil.getBusPathTitle(firstBusPath)+
-                                "\ndes is "+AMapUtil.getBusPathDes(firstBusPath));
+                mapActivity.route_tv.setText(
+                        AMapUtil.getBusPathTitle(firstBusPath)
+                                +"\n"
+                                +AMapUtil.getBusPathDes(firstBusPath));
                 Log.d(TAG, "onBusRouteSearched: title is "+
                         AMapUtil.getBusPathTitle(firstBusPath)+
                         " des is "+AMapUtil.getBusPathDes(firstBusPath));

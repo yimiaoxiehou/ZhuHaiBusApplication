@@ -7,6 +7,7 @@ import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import java.util.List;
 import top.yimiaohome.zhuhai_busapplication.Activity.MapActivity;
+import top.yimiaohome.zhuhai_busapplication.Adapter.PoiActAdapter;
 
 /**
  * Created by yimia on 2017/12/24.
@@ -17,6 +18,7 @@ public class Poi implements PoiSearch.OnPoiSearchListener {
     static final String TAG = "Poi";
     private static Poi instance;
     MapActivity mapActivity;
+    PoiActAdapter poiActAdapter;
 
     private Poi() {
 
@@ -30,7 +32,8 @@ public class Poi implements PoiSearch.OnPoiSearchListener {
     }
 
     public void queryPoi(Context mContenxt,String keyWord) {
-        mapActivity = (MapActivity) MapActivity.getCurrentActivity();
+        if (mapActivity == null)
+            mapActivity = (MapActivity) MapActivity.getCurrentActivity();
         String cityCode = "珠海";
         PoiSearch.Query query = new PoiSearch.Query(keyWord, "", cityCode);//输入提示
         query.setCityLimit(true);    //强制使用城市范围限制
@@ -48,11 +51,9 @@ public class Poi implements PoiSearch.OnPoiSearchListener {
         if (i == 1000){
             List<PoiItem> poiItemList = poiResult.getPois();
             Log.d(TAG, "onPoiSearched: first poi is "+poiItemList.get(0).getTitle());
-            mapActivity.destination_tv.setText(poiItemList.get(0).getTitle());
-            poiItemList.forEach( r -> {
-                Log.d(TAG, "onPoiSearched: result is " + r.getTitle());
-            });
-            mapActivity.poiItemList=poiItemList;
+            mapActivity.poiItemList = poiItemList;
+            poiActAdapter = new PoiActAdapter(poiItemList,mapActivity.pointType,mapActivity.mContext);
+            mapActivity.poiListLV.setAdapter(poiActAdapter);
         }else {
             Log.d(TAG, "onPoiSearched: error ");
         }

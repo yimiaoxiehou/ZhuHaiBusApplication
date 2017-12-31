@@ -151,7 +151,7 @@ public class RealTimeBusQueryActivity extends AppCompatActivity implements TextW
         Log.d(TAG, "showFromAndToStation: lineId is "+lineId);
         Cursor cursor = db.rowQuery(
                         "select `Id` as _id," +
-                                "FirstStation as _first," +
+                                "`FirstStation` as _first," +
                                 "`ToStation` as _to from "
                         + LocalSql.LineInfoTable
                         +" where id like ? "
@@ -171,7 +171,7 @@ public class RealTimeBusQueryActivity extends AppCompatActivity implements TextW
     void showStationAndRunningBusList(){
         fromStationTV.setText(queryLine.getFromStation());
         toStationTV.setText(queryLine.getToStation());
-        directionTV.setVisibility(View.VISIBLE);
+        directionTV.setVisibility(View.GONE);
         ArrayList result = HttpGetServerData.GetBusListOnRoadWithStation(queryLine.getId().replace(" ",""),
                 queryLine.getFromStation().replace(" ",""));
         //ArrayList result = HttpGetServerData.GetBusListOnRoadWithStation("8路","拱北口岸总站");

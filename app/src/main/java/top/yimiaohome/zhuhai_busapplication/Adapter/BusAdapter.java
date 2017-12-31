@@ -52,11 +52,9 @@ public class BusAdapter extends BaseAdapter {
         LinearLayout linearLayout=null;
         if(textIdList.get(position).getClass()==Bus.class){
             linearLayout = (LinearLayout) layoutInflater.inflate(R.layout.busitem_view,null);
-            TextView textView1=(TextView) linearLayout.findViewById(R.id.bus_text1);
+            TextView textView1=(TextView) linearLayout.findViewById(R.id.bus_text);
             Bus tempBus = (Bus) textIdList.get(position);
             textView1.setText(tempBus.getBusNumber());
-
-
         }
         else if(textIdList.get(position).getClass()==Station.class){
             linearLayout=(LinearLayout) layoutInflater.inflate(R.layout.stationitem_view,null);

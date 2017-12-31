@@ -5,12 +5,16 @@ import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.MapView;
@@ -26,29 +30,30 @@ import java.util.List;
 import java.util.Map;
 import top.yimiaohome.zhuhai_busapplication.AMap.Poi;
 import top.yimiaohome.zhuhai_busapplication.AMap.Route;
+import top.yimiaohome.zhuhai_busapplication.Adapter.PoiActAdapter;
 import top.yimiaohome.zhuhai_busapplication.R;
 
 /**
  * Created by yimia on 2017/12/18.
  */
 
-public class MapActivity extends AppCompatActivity implements View.OnClickListener,AMap.OnMyLocationChangeListener {
+public class MapActivity extends AppCompatActivity implements AMap.OnMyLocationChangeListener {
     final static String TAG = "MapActivity";
 
     public Context mContext;
     public List<PoiItem> poiItemList;
     public GeocodeAddress destination;
-    public TextView destination_tv;
+    public TextView startingET;
+    public TextView destinationET;
     public TextView route_tv;
-    public BusRouteResult busRouteResult;
     public AMap aMap;
     public LatLonPoint startPoint;
     public LatLonPoint endPoint;
     public Location mLocation;
     public MapView mMapView;
-    public EditText destination_et;
-    public Button queryDest_bn;
-    boolean isFirst;
+    public ListView poiListLV;
+    public int pointType;
+    public boolean startHere;
 
     public static Activity getCurrentActivity () {
         try {
@@ -90,59 +95,66 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         mContext = getApplicationContext();
         //显示地图
         setContentView(R.layout.activity_map);
-        destination_et = (EditText) findViewById(R.id.destination_et);
-        queryDest_bn = (Button) findViewById(R.id.query_location_btn);
-        destination_tv = (TextView) findViewById(R.id.destination_query_result_tv);
+        startingET = (EditText) findViewById(R.id.starting_et);
+        destinationET = (EditText) findViewById(R.id.destination_et);
+        poiListLV = (ListView) findViewById(R.id.poi_lists_lv);
         mMapView = (MapView) findViewById(R.id.map);
         route_tv = (TextView) findViewById(R.id.route_tv);
         mMapView.onCreate(savedInstanceState);
         if (aMap == null){
             aMap = mMapView.getMap();
         }
-        isFirst=true;
         //定位并显示当前位置
         mapReset();
-        queryDest_bn.setOnClickListener(this);
+        mLocation = aMap.getMyLocation();
+        startHere = true;
+        startingET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString()!="当前位置"){
+                    startHere = false;
+                    pointType = PoiActAdapter.start;
+                    Poi.getInstance().queryPoi(mContext,s.toString());
+                    poiListLV.setVisibility(View.VISIBLE);
+                }else{
+                    startHere = true;
+                }
+            }
+        });
+        destinationET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                pointType = PoiActAdapter.end;
+                Poi.getInstance().queryPoi(mContext,s.toString());
+                poiListLV.setVisibility(View.VISIBLE);
+            }
+        });
         RouteOverlay routeOverlay = aMap.addRouteOverlay();
     }
 
     public void mapReset(){
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm!=null){
+            imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(),0);
+        }
         MyLocationStyle myLocationStyle = new MyLocationStyle();
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);
         myLocationStyle.interval(2000);
         aMap.setMyLocationStyle(myLocationStyle);
         aMap.setOnMyLocationChangeListener(this);
         aMap.setMyLocationEnabled(true);
-    }
-
-    @Override
-    public void onClick(View v) {
-        Log.d(TAG, "onClick: click");
-        switch (v.getId()){
-            case R.id.query_location_btn:
-                if (isFirst) {
-                    //查询 poi (point of interest) 兴趣点
-                    if (destination_et.getText().toString()!="") {
-                        isFirst=false;
-                        poiItemList=null;
-                        Poi.getInstance().queryPoi(mContext, destination_et.getText().toString());
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        if (imm!=null){
-                            imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(),0);
-                        }
-                    }
-                }
-                else{
-                    isFirst = true;
-                    if (poiItemList!=null){
-                        aMap.clear();
-                        mapReset();
-                        startPoint = new LatLonPoint(mLocation.getLatitude(), mLocation.getLongitude());
-                        endPoint = poiItemList.get(0).getLatLonPoint();
-                        Route.getInstance().getRoute(startPoint, endPoint);
-                    }
-                }
-        }
     }
 
     @Override
@@ -171,17 +183,22 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
     @Override
     public void onMyLocationChange(Location location) {
-        if (mLocation == null || (!locationEquael(location.getLongitude(),mLocation.getLongitude())
-                || !locationEquael(location.getLatitude(),mLocation.getLatitude()))){
+        setmLocation(location);
+    }
+    void setmLocation(Location location){
+        if (mLocation == null ||
+                (!locationEqual(location.getLongitude(),mLocation.getLongitude())
+                        || !locationEqual(location.getLatitude(),mLocation.getLatitude()))){
             mLocation = location;
             Log.d(TAG, "onMyLocationChange: "+location.getLatitude()+","+location.getLongitude());
         }
     }
 
-    Boolean locationEquael(double n,double o){
+    Boolean locationEqual(double n,double o){
         if ((int)(n*1000)==(int)(o*1000))
             return true;
         else
             return false;
     }
+
 }
