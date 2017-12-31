@@ -66,8 +66,4 @@ public class BusAdapter extends BaseAdapter {
         }
         return linearLayout;
     }
-    public void addText(String busNumber){
-        textIdList.add(busNumber);
-        notifyDataSetChanged();
-    }
 }

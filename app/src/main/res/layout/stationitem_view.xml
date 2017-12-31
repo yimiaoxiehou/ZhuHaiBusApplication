@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="50dp">
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="4dp">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -14,12 +18,15 @@
             android:layout_toStartOf="@+id/station_index"
             android:gravity="center_vertical"
             android:text="" />
+
         <TextView
             android:id="@+id/station_index"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/quan1"
-            android:gravity="center"/>
+            android:layout_centerVertical="true"
+            android:background="@drawable/quan"
+            android:gravity="center"
+            android:scaleType="centerInside" />
     </RelativeLayout>
-</LinearLayout>
+</android.support.v7.widget.CardView>
