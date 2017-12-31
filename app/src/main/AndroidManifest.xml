@@ -40,7 +40,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activity.RealTimeBusQueryActivity" />
-        <activity android:name=".Activity.RouteSearchActivity" />
         <activity android:name=".Activity.MapActivity"
             android:windowSoftInputMode="stateVisible|adjustResize"/>
 

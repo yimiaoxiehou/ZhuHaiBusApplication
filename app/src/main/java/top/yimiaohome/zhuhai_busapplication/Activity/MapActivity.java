@@ -23,11 +23,15 @@ import com.amap.api.maps.model.RouteOverlay;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.geocoder.GeocodeAddress;
+import com.amap.api.services.route.BusPath;
 import com.amap.api.services.route.BusRouteResult;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
+
+import top.yimiaohome.zhuhai_busapplication.AMap.AMapUtil;
+import top.yimiaohome.zhuhai_busapplication.AMap.BusRouteOverlay;
 import top.yimiaohome.zhuhai_busapplication.AMap.Poi;
 import top.yimiaohome.zhuhai_busapplication.AMap.Route;
 import top.yimiaohome.zhuhai_busapplication.Adapter.PoiActAdapter;
@@ -37,7 +41,7 @@ import top.yimiaohome.zhuhai_busapplication.R;
  * Created by yimia on 2017/12/18.
  */
 
-public class MapActivity extends AppCompatActivity implements AMap.OnMyLocationChangeListener {
+public class MapActivity extends AppCompatActivity implements AMap.OnMyLocationChangeListener,View.OnClickListener {
     final static String TAG = "MapActivity";
 
     public Context mContext;
@@ -54,6 +58,10 @@ public class MapActivity extends AppCompatActivity implements AMap.OnMyLocationC
     public ListView poiListLV;
     public int pointType;
     public boolean startHere;
+    public BusRouteResult busRouteResult;
+    public int busRouteResultPosition;
+    private Button previousRouteBTN;
+    private Button nextRouteBTN;
 
     public static Activity getCurrentActivity () {
         try {
@@ -100,6 +108,10 @@ public class MapActivity extends AppCompatActivity implements AMap.OnMyLocationC
         poiListLV = (ListView) findViewById(R.id.poi_lists_lv);
         mMapView = (MapView) findViewById(R.id.map);
         route_tv = (TextView) findViewById(R.id.route_tv);
+        previousRouteBTN = (Button) findViewById(R.id.previous_route_btn);
+        nextRouteBTN = (Button) findViewById(R.id.next_route_btn);
+        previousRouteBTN.setOnClickListener(this);
+        nextRouteBTN.setOnClickListener(this);
         mMapView.onCreate(savedInstanceState);
         if (aMap == null){
             aMap = mMapView.getMap();
@@ -201,4 +213,48 @@ public class MapActivity extends AppCompatActivity implements AMap.OnMyLocationC
             return false;
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.previous_route_btn:
+                aMap.clear();
+                mapReset();
+                busRouteResultPosition--;
+                Log.d(TAG, "onClick: previous route ");
+                screenRouteOverlay();
+                break;
+            case R.id.next_route_btn:
+                aMap.clear();
+                mapReset();
+                busRouteResultPosition++;
+                Log.d(TAG, "onClick: next route ");
+                screenRouteOverlay();
+                break;
+        }
+    }
+
+    public void screenRouteOverlay(){
+        if (busRouteResultPosition < 0){
+            busRouteResultPosition = 0;
+        }else if( busRouteResultPosition >= busRouteResult.getPaths().size()){
+            busRouteResultPosition = busRouteResult.getPaths().size()-1;
+        }else if(busRouteResult != null){
+            BusPath busPath = busRouteResult.getPaths().get(busRouteResultPosition);
+            route_tv.setText(
+                    AMapUtil.getBusPathTitle(busPath)
+                            + "\n"
+                            + AMapUtil.getBusPathDes(busPath));
+            Log.d(TAG, "onBusRouteSearched: title is " +
+                    AMapUtil.getBusPathTitle(busPath) +
+                    " des is " + AMapUtil.getBusPathDes(busPath));
+            BusRouteOverlay busRouteOverlay = new BusRouteOverlay(
+                    mContext,
+                    aMap,
+                    busPath,
+                    startPoint,
+                    endPoint);
+            busRouteOverlay.addToMap();
+            busRouteOverlay.zoomToSpan();
+        }
+    }
 }
