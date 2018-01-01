@@ -16,6 +16,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.MyLocationStyle;
@@ -99,7 +101,7 @@ public class MapActivity extends AppCompatActivity implements AMap.OnMyLocationC
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide();
         mContext = getApplicationContext();
         //显示地图
         setContentView(R.layout.activity_map);
@@ -117,9 +119,9 @@ public class MapActivity extends AppCompatActivity implements AMap.OnMyLocationC
             aMap = mMapView.getMap();
         }
         //定位并显示当前位置
-        mapReset();
         mLocation = aMap.getMyLocation();
         startHere = true;
+        mapReset();
         startingET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -161,12 +163,14 @@ public class MapActivity extends AppCompatActivity implements AMap.OnMyLocationC
         if (imm!=null){
             imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(),0);
         }
-        MyLocationStyle myLocationStyle = new MyLocationStyle();
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);
-        myLocationStyle.interval(2000);
-        aMap.setMyLocationStyle(myLocationStyle);
-        aMap.setOnMyLocationChangeListener(this);
-        aMap.setMyLocationEnabled(true);
+        if (startHere) {
+            MyLocationStyle myLocationStyle = new MyLocationStyle();
+            myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);
+            myLocationStyle.interval(2000);
+            aMap.setMyLocationStyle(myLocationStyle);
+            aMap.setOnMyLocationChangeListener(this);
+            aMap.setMyLocationEnabled(true);
+        }
     }
 
     @Override
@@ -217,15 +221,11 @@ public class MapActivity extends AppCompatActivity implements AMap.OnMyLocationC
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.previous_route_btn:
-                aMap.clear();
-                mapReset();
                 busRouteResultPosition--;
                 Log.d(TAG, "onClick: previous route ");
                 screenRouteOverlay();
                 break;
             case R.id.next_route_btn:
-                aMap.clear();
-                mapReset();
                 busRouteResultPosition++;
                 Log.d(TAG, "onClick: next route ");
                 screenRouteOverlay();
@@ -234,27 +234,35 @@ public class MapActivity extends AppCompatActivity implements AMap.OnMyLocationC
     }
 
     public void screenRouteOverlay(){
-        if (busRouteResultPosition < 0){
-            busRouteResultPosition = 0;
-        }else if( busRouteResultPosition >= busRouteResult.getPaths().size()){
-            busRouteResultPosition = busRouteResult.getPaths().size()-1;
-        }else if(busRouteResult != null){
-            BusPath busPath = busRouteResult.getPaths().get(busRouteResultPosition);
-            route_tv.setText(
-                    AMapUtil.getBusPathTitle(busPath)
-                            + "\n"
-                            + AMapUtil.getBusPathDes(busPath));
-            Log.d(TAG, "onBusRouteSearched: title is " +
-                    AMapUtil.getBusPathTitle(busPath) +
-                    " des is " + AMapUtil.getBusPathDes(busPath));
-            BusRouteOverlay busRouteOverlay = new BusRouteOverlay(
-                    mContext,
-                    aMap,
-                    busPath,
-                    startPoint,
-                    endPoint);
-            busRouteOverlay.addToMap();
-            busRouteOverlay.zoomToSpan();
+        if(busRouteResult != null) {
+            if (busRouteResultPosition < 0) {
+                busRouteResultPosition = 0;
+                Toast.makeText(getApplicationContext(), "当前已是第一号路线。", Toast.LENGTH_SHORT).show();
+            } else if (busRouteResultPosition >= busRouteResult.getPaths().size()) {
+                busRouteResultPosition = busRouteResult.getPaths().size() - 1;
+                Toast.makeText(getApplicationContext(), "当前已是最末条路线。", Toast.LENGTH_SHORT).show();
+            }else{
+                aMap.clear();
+                mapReset();
+                BusPath busPath = busRouteResult.getPaths().get(busRouteResultPosition);
+                route_tv.setText(
+                        AMapUtil.getBusPathTitle(busPath)
+                                + "\n"
+                                + AMapUtil.getBusPathDes(busPath));
+                Log.d(TAG, "onBusRouteSearched: title is " +
+                        AMapUtil.getBusPathTitle(busPath) +
+                        " des is " + AMapUtil.getBusPathDes(busPath));
+                BusRouteOverlay busRouteOverlay = new BusRouteOverlay(
+                        mContext,
+                        aMap,
+                        busPath,
+                        startPoint,
+                        endPoint);
+                busRouteOverlay.addToMap();
+                busRouteOverlay.zoomToSpan();
+            }
+        }else {
+            Toast.makeText(getApplicationContext(),"查询出错，请确保输入正常或检查网络",Toast.LENGTH_LONG).show();
         }
     }
 }

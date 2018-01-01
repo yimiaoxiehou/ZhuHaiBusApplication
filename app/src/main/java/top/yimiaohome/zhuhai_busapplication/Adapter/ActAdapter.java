@@ -1,19 +1,14 @@
-package top.yimiaohome.zhuhai_busapplication.Database;
+package top.yimiaohome.zhuhai_busapplication.Adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
-
-import java.util.List;
-
 import top.yimiaohome.zhuhai_busapplication.Activity.RealTimeBusQueryActivity;
-import top.yimiaohome.zhuhai_busapplication.Entity.Line;
 import top.yimiaohome.zhuhai_busapplication.R;
 
 /**

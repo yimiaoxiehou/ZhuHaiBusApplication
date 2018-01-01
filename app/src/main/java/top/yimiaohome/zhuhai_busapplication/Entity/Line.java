@@ -1,7 +1,5 @@
 package top.yimiaohome.zhuhai_busapplication.Entity;
 
-import org.litepal.crud.DataSupport;
-
 /**
  * Created by yimia on 2017/12/17.
  */

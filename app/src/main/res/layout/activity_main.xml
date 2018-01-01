@@ -6,25 +6,50 @@
     android:layout_height="match_parent"
     tools:context="top.yimiaohome.zhuhai_busapplication.Activity.MainActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/open_realtime_bus_query_btn"
+            <Button
+                android:id="@+id/open_realtime_bus_query_btn"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_weight="1"
+                android:text="公交实时查询" />
+
+            <Button
+                android:id="@+id/open_route_search_btn"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:text="公交出行路线规划" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/author_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="公交实时查询" />
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="bug反馈：QQ 981952639"/>
 
-        <Button
-            android:id="@+id/open_route_search_btn"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="公交出行路线规划" />
+            android:layout_above="@+id/author_tv"
+            android:layout_centerHorizontal="true"
+            android:text="作者：yimiao, hk, rikka" />
 
-    </LinearLayout>
-
+    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
